@@ -81,53 +81,34 @@ for week in range(50):
 svg += """
 
 <g class="duck">
-  <!-- Pixel art rubber duck (facing right) -->
-  <!-- Beak -->
-  <rect x="28" y="16" width="4" height="4" fill="#ff9500"/>
-  <rect x="28" y="20" width="4" height="4" fill="#ff9500"/>
+  <!-- Smooth rubber duck illustration (facing right) -->
+
+  <!-- Body (using path for flat bottom) -->
+  <path d="M 1 28 Q 1 20, 15 20 Q 29 20, 29 28 Q 29 36, 15 36 Q 1 36, 1 28 Z" fill="#ffdd00"/>
 
   <!-- Head -->
-  <rect x="16" y="12" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="12" width="4" height="4" fill="#ffdd00"/>
-  <rect x="24" y="12" width="4" height="4" fill="#ffdd00"/>
-  <rect x="16" y="16" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="16" width="4" height="4" fill="#ffdd00"/>
-  <rect x="24" y="16" width="4" height="4" fill="#ffdd00"/>
-  <rect x="16" y="20" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="20" width="4" height="4" fill="#ffdd00"/>
-  <rect x="24" y="20" width="4" height="4" fill="#ffdd00"/>
+  <circle cx="22" cy="18" r="9" fill="#ffdd00"/>
+
+  <!-- Beak -->
+  <ellipse cx="29" cy="18" rx="4" ry="3" fill="#ff9500"/>
 
   <!-- Eye -->
-  <rect x="24" y="14" width="2" height="2" fill="#000000"/>
+  <circle cx="25" cy="16" r="1.5" fill="#000000"/>
 
-  <!-- Body -->
-  <rect x="0" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="4" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="8" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="12" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="16" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="24" width="4" height="4" fill="#ffdd00"/>
-  <rect x="24" y="24" width="4" height="4" fill="#ffdd00"/>
+  <!-- Highlight on eye -->
+  <circle cx="25.5" cy="15.5" r="0.5" fill="#ffffff"/>
 
-  <rect x="0" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="4" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="8" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="12" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="16" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="28" width="4" height="4" fill="#ffdd00"/>
-  <rect x="24" y="28" width="4" height="4" fill="#ffdd00"/>
+  <!-- Shadow under body -->
+  <ellipse cx="15" cy="36" rx="12" ry="2" fill="#000000" opacity="0.15"/>
 
-  <rect x="4" y="32" width="4" height="4" fill="#ffdd00"/>
-  <rect x="8" y="32" width="4" height="4" fill="#ffdd00"/>
-  <rect x="12" y="32" width="4" height="4" fill="#ffdd00"/>
-  <rect x="16" y="32" width="4" height="4" fill="#ffdd00"/>
-  <rect x="20" y="32" width="4" height="4" fill="#ffdd00"/>
+  <!-- Shading on body -->
+  <ellipse cx="18" cy="30" rx="6" ry="4" fill="#ffcc00" opacity="0.3"/>
 
-  <!-- Shadow -->
-  <rect x="20" y="28" width="4" height="4" fill="#ffcc00" opacity="0.5"/>
-  <rect x="24" y="28" width="4" height="4" fill="#ffcc00" opacity="0.5"/>
-  <rect x="16" y="32" width="4" height="4" fill="#ffcc00" opacity="0.5"/>
-  <rect x="20" y="32" width="4" height="4" fill="#ffcc00" opacity="0.5"/>
+  <!-- Highlight on head -->
+  <ellipse cx="20" cy="15" rx="3" ry="2" fill="#ffff99" opacity="0.6"/>
+
+  <!-- Wing -->
+  <ellipse cx="10" cy="27" rx="3" ry="5" fill="#ffcc00" opacity="0.5"/>
 </g>
 
 </svg>
