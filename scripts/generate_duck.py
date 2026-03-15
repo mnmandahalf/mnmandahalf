@@ -63,6 +63,8 @@ today_weekday = (today.weekday() + 1) % 7  # Sunday=0, Monday=1, ..., Saturday=6
 oldest_date = today - datetime.timedelta(days=349)
 oldest_weekday = (oldest_date.weekday() + 1) % 7
 
+import math
+
 for week in range(50):
     for day in range(7):
         # Calculate the date
@@ -76,7 +78,44 @@ for week in range(50):
             level = contributions.get(date, 0)
             color = f"water{level}"
 
-        svg += f'<rect class="{color}" x="{week*(size+gap)}" y="{day*(size+gap)}" width="{size}" height="{size}" rx="2"/>'
+        # Add wave-like offset for pool tile effect
+        # Create organic, wavy grid pattern - distort the tile shape itself, not just position
+        base_x = week * (size + gap)
+        base_y = day * (size + gap)
+
+        # Calculate wave distortion for each corner of the tile
+        wave_tl_x = math.sin(week * 1.2 + day * 0.9) * 0.8
+        wave_tl_y = math.cos(day * 1.3 + week * 0.8) * 0.8
+        wave_tr_x = math.sin((week + 1) * 1.2 + day * 0.9) * 0.8
+        wave_tr_y = math.cos(day * 1.3 + (week + 1) * 0.8) * 0.8
+        wave_br_x = math.sin((week + 1) * 1.2 + (day + 1) * 0.9) * 0.8
+        wave_br_y = math.cos((day + 1) * 1.3 + (week + 1) * 0.8) * 0.8
+        wave_bl_x = math.sin(week * 1.2 + (day + 1) * 0.9) * 0.8
+        wave_bl_y = math.cos((day + 1) * 1.3 + week * 0.8) * 0.8
+
+        # Create path with distorted corners and rounded edges
+        r = 2  # corner radius
+
+        # Top-left corner
+        path = f'M {base_x + r + wave_tl_x:.2f} {base_y + wave_tl_y:.2f} '
+        # Top edge to top-right
+        path += f'L {base_x + size - r + wave_tr_x:.2f} {base_y + wave_tr_y:.2f} '
+        # Top-right corner (rounded)
+        path += f'Q {base_x + size + wave_tr_x:.2f} {base_y + wave_tr_y:.2f} {base_x + size + wave_tr_x:.2f} {base_y + r + wave_tr_y:.2f} '
+        # Right edge to bottom-right
+        path += f'L {base_x + size + wave_br_x:.2f} {base_y + size - r + wave_br_y:.2f} '
+        # Bottom-right corner (rounded)
+        path += f'Q {base_x + size + wave_br_x:.2f} {base_y + size + wave_br_y:.2f} {base_x + size - r + wave_br_x:.2f} {base_y + size + wave_br_y:.2f} '
+        # Bottom edge to bottom-left
+        path += f'L {base_x + r + wave_bl_x:.2f} {base_y + size + wave_bl_y:.2f} '
+        # Bottom-left corner (rounded)
+        path += f'Q {base_x + wave_bl_x:.2f} {base_y + size + wave_bl_y:.2f} {base_x + wave_bl_x:.2f} {base_y + size - r + wave_bl_y:.2f} '
+        # Left edge to top-left
+        path += f'L {base_x + wave_tl_x:.2f} {base_y + r + wave_tl_y:.2f} '
+        # Top-left corner (rounded)
+        path += f'Q {base_x + wave_tl_x:.2f} {base_y + wave_tl_y:.2f} {base_x + r + wave_tl_x:.2f} {base_y + wave_tl_y:.2f} Z'
+
+        svg += f'<path class="{color}" d="{path}"/>'
 
 svg += """
 
