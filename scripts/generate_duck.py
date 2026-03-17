@@ -3,9 +3,8 @@ import datetime
 
 USER = "mnmandahalf"
 
-# Get today's date in JST (UTC+9)
-jst = datetime.timezone(datetime.timedelta(hours=9))
-today = datetime.datetime.now(jst).date()
+# Get today's date in UTC (GitHub uses UTC)
+today = datetime.datetime.now(datetime.timezone.utc).date()
 
 # Scrape GitHub contribution graph
 url = f"https://github.com/users/{USER}/contributions"
@@ -21,8 +20,34 @@ if response.status_code == 200:
     for date, level in matches:
         contributions[date] = int(level)
 
+size = 10
+gap = 2
+
+# Display contributions for the past 365 days
+# GitHub graph: Sunday(0) at top, Saturday(6) at bottom
+# Get today's weekday (0=Mon, 6=Sun) -> Convert to GitHub format (0=Sun, 6=Sat)
+today_weekday = (today.weekday() + 1) % 7  # Sunday=0, Monday=1, ..., Saturday=6
+
+# Calculate the start date (365 days ago, rounded to Sunday)
+days_ago = 365
+oldest_date = today - datetime.timedelta(days=days_ago)
+# Round back to the most recent Sunday before oldest_date
+oldest_weekday = (oldest_date.weekday() + 1) % 7
+oldest_date = oldest_date - datetime.timedelta(days=oldest_weekday)
+
+# Calculate end date (round forward to the next Saturday after today)
+days_until_saturday = (6 - today_weekday) % 7
+end_date = today + datetime.timedelta(days=days_until_saturday)
+
+# Calculate total weeks needed
+total_days = (end_date - oldest_date).days + 1
+total_weeks = (total_days + 6) // 7  # Round up to include partial weeks
+
+# Calculate SVG width based on number of weeks
+svg_width = total_weeks * (size + gap)
+
 svg = f"""
-<svg width="720" height="84" xmlns="http://www.w3.org/2000/svg">
+<svg width="{svg_width}" height="84" xmlns="http://www.w3.org/2000/svg">
 
 <style>
 .water0 {{ fill:none }}
@@ -51,31 +76,20 @@ svg = f"""
 
 """
 
-size = 10
-gap = 2
-
-# Display contributions for the past 350 days (50 weeks x 7 days)
-# GitHub graph: Sunday(0) at top, Saturday(6) at bottom
-# Get today's weekday (0=Mon, 6=Sun) -> Convert to GitHub format (0=Sun, 6=Sat)
-today_weekday = (today.weekday() + 1) % 7  # Sunday=0, Monday=1, ..., Saturday=6
-
-# Calculate from the oldest date (leftmost)
-oldest_date = today - datetime.timedelta(days=349)
-oldest_weekday = (oldest_date.weekday() + 1) % 7
-
 import math
 
-for week in range(50):
+for week in range(total_weeks):
     for day in range(7):
         # Calculate the date
-        days_from_oldest = week * 7 + day - oldest_weekday
-        if days_from_oldest < 0:
-            # First week, dates before oldest_date are blank
+        date = oldest_date + datetime.timedelta(days=week * 7 + day)
+
+        # Don't show dates in the future
+        if date > today:
             color = "water0"
         else:
-            date = (oldest_date + datetime.timedelta(days=days_from_oldest)).strftime("%Y-%m-%d")
+            date_str = date.strftime("%Y-%m-%d")
             # Determine color based on contribution level (0-4)
-            level = contributions.get(date, 0)
+            level = contributions.get(date_str, 0)
             color = f"water{level}"
 
         # Add wave-like offset for pool tile effect
